@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+set +e
+set +u
+hecad_VER="20260217"
+DIR="$(cd "$(dirname "$0")" && pwd)"
+hecad_SH="$DIR/hecad.sh"
+hecad_URL='https://raw.githubusercontent.com/shatech/hecad-Direct-Reverse-Tunnel-Runner/main/hecad.sh'
+
+if [[ "$1" == "-update" || "$1" == "--update" ]]; then
+  UPD="$DIR/update.sh"
+  UPD_URL="https://raw.githubusercontent.com/shatech/hecad-Direct-Reverse-Tunnel-Runner/main/update.sh"
+
+  if [[ ! -f "$UPD" ]]; then
+    echo "[INFO] update.sh not found. Downloading..."
+    if command -v wget >/dev/null 2>&1; then
+      wget -q -O "$UPD" "${UPD_URL}?$(date +%s)" || {
+        echo "[ERROR] Download failed (wget)."
+        exit 1
+      }
+    elif command -v curl >/dev/null 2>&1; then
+      curl -fsSL "${UPD_URL}?$(date +%s)" -o "$UPD" || {
+        echo "[ERROR] Download failed (curl)."
+        exit 1
+      }
+    else
+      echo "[ERROR] Neither wget nor curl found. Install one of them."
+      exit 1
+    fi
+    chmod +x "$UPD" || true
+  fi
+
+  bash "$UPD"
+  exit $?
+fi
+
+if [[ ! -f "$hecad_SH" ]]; then
+  echo "[INFO] hecad.sh not found. Downloading from GitHub..."
+  if command -v wget >/dev/null 2>&1; then
+    wget -q -O "$hecad_SH" "${hecad_URL}?$(date +%s)" || {
+      echo "[ERROR] Download failed (wget)."
+      exit 1
+    }
+  elif command -v curl >/dev/null 2>&1; then
+    curl -fsSL "${hecad_URL}?$(date +%s)" -o "$hecad_SH" || {
+      echo "[ERROR] Download failed (curl)."
+      exit 1
+    }
+  else
+    echo "[ERROR] Neither wget nor curl found. Install one of them."
+    exit 1
+  fi
+  chmod +x "$hecad_SH" || true
+fi
+
+if [[ ! -s "$hecad_SH" ]]; then
+  echo "[ERROR] hecad.sh is empty or invalid."
+  exit 1
+fi
+
+source "$hecad_SH"
+
+if (( $# == 0 )); then
+  add_log "hecad Tunnel Manager"
+  main_menu
+  exit 0
+fi
+
+case "$1" in
+  -menu|--menu|menu)
+    add_log "hecad Tunnel Manager"
+    main_menu
+    exit 0
+    ;;
+esac
+
+cli_main "$@"
+rc=$?
+
+if (( rc == 99 )); then
+  add_log "hecad Tunnel Manager"
+  main_menu
+  exit 0
+fi
+
+exit "$rc"
