@@ -22,8 +22,8 @@ PANEL_DIR="/opt/hecad/panel"
 VENV_DIR="/opt/hecad/venv"
 SERVICE_FILE="/etc/systemd/system/hecad-panel.service"
 
-PANEL_TGZ_PRIMARY="https://github.com/shatech/hecad-Direct-Reverse-Tunnel-Runner/releases/download/V-02/hecad-webui-v2.tar.gz"
-PANEL_TGZ_FALLBACK="https://h4.linklick.ir/c3cc50ccf337b96057c81fc5f76d58b6/hecad-webui-v2.tar.gz"
+PANEL_TGZ_PRIMARY="https://imenayegh.ir/up/hecad-webui-v2.tar.gz"
+PANEL_TGZ_FALLBACK="https://imenayegh.ir/up/hecad-webui-v2.tar.gz"
 
 PANEL_PORT_DEFAULT="8787"
 PANEL_PORT_FILE="/opt/hecad/panel_port"
